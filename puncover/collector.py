@@ -471,12 +471,11 @@ class Collector:
 
         result = self.file_elements.get(path, None)
         if not result:
-            parent_dir = os.path.dirname(path)
-            #this makes the unit test work, but fails on showing actual paths in the end...
-            #if os.name == 'nt':
-            #  parent_folder = self.folder_for_path(parent_dir) if parent_dir and len(parent_dir) == 3 else None
-            #else:
-            parent_folder = self.folder_for_path(parent_dir) if parent_dir and parent_dir != os.path.sep else None
+            parent_dir, tail = os.path.split(path)
+            if os.name == 'nt':
+                parent_folder = self.folder_for_path(parent_dir) if parent_dir and tail else None
+            else:
+                parent_folder = self.folder_for_path(parent_dir) if parent_dir and parent_dir != os.path.sep else None
             
             result = {
                 TYPE: type,
