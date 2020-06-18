@@ -125,7 +125,6 @@ class Collector:
 
        
     def parse_size_line(self, line):
-        # print(line)
         if os.name == 'nt':
           group_offset = 1
         else:
@@ -159,7 +158,6 @@ class Collector:
     parse_assembly_text_c_reference_pattern = re.compile(r"^([\w]?:?/[^:]+)(:(\d+))?")
 
     def parse_assembly_text(self, assembly):
-        # print(assembly)
         name = None
         addr = None
         symbol_file = None

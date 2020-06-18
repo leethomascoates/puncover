@@ -12,8 +12,8 @@ from puncover import renderers
 from puncover.gcc_tools import GCCTools
 from puncover.version import __version__
 
-def create_builder(gcc_base_filename, elf_file=None, su_dir=None, src_root=None):
-    c = Collector(GCCTools(gcc_base_filename))
+def create_builder(gcc_base_filename, gcc_filename_alternative, elf_file=None, su_dir=None, src_root=None):
+    c = Collector(GCCTools(gcc_base_filename, gcc_filename_alternative))
     if elf_file:
         return ElfBuilder(c, src_root, elf_file, su_dir)
     else:
@@ -46,6 +46,8 @@ def main():
                         help='port the HTTP server runs on')
     parser.add_argument('--host', dest='host', default='127.0.0.1',
                         help='host IP the HTTP server runs on')
+    parser.add_argument('--gcc_tools_alternative', dest='gcc_tools_alternative',
+                        help='filename prefix for your gcc tools, e.g. ~/arm-cs-tools/bin/arm-none-eabi-')
     args = parser.parse_args()
 
     if not args.gcc_tools_base:
@@ -53,7 +55,7 @@ def main():
             print('DEPRECATED: argument --arm_tools_dir will be removed, use --gcc_tools_base instead.')
             args.gcc_tools_base = os.path.join(args.arm_tools_dir, 'bin/arm-none-eabi-')
 
-    builder = create_builder(args.gcc_tools_base, elf_file=args.elf_file,
+    builder = create_builder(args.gcc_tools_base, args.gcc_tools_alternative, elf_file=args.elf_file,
                              src_root=args.src_root, su_dir=args.build_dir)
     builder.build_if_needed()
     renderers.register_jinja_filters(app.jinja_env)
